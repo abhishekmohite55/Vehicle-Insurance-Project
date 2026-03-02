@@ -51,6 +51,8 @@ class ModelTrainerConfig:
     _max_depth = MIN_SAMPLES_SPLIT_MAX_DEPTH
     _criterion = MIN_SAMPLES_SPLIT_CRITERION
     _random_state = MIN_SAMPLES_SPLIT_RANDOM_STATE
+    _class_weight = MODEL_TRAINER_CLASS_WEIGHT
+    expected_f1_score: float = MODEL_TRAINER_EXPECTED_F1_SCORE
 
 @dataclass
 class ModelEvaluationConfig:

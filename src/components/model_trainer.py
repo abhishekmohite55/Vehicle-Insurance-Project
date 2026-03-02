@@ -12,6 +12,9 @@ from src.entity.config_entity import ModelTrainerConfig
 from src.entity.artifact_entity import DataTransformationArtifact, ModelTrainerArtifact, ClassificationMetricArtifact
 from src.entity.estimator import MyModel
 
+
+
+
 class ModelTrainer:
     def __init__(self, data_transformation_artifact: DataTransformationArtifact,
                  model_trainer_config: ModelTrainerConfig):
@@ -39,12 +42,13 @@ class ModelTrainer:
 
             # Initialize RandomForestClassifier with specified parameters
             model = RandomForestClassifier(
-                n_estimators = self.model_trainer_config._n_estimators,
-                min_samples_split = self.model_trainer_config._min_samples_split,
-                min_samples_leaf = self.model_trainer_config._min_samples_leaf,
-                max_depth = self.model_trainer_config._max_depth,
-                criterion = self.model_trainer_config._criterion,
-                random_state = self.model_trainer_config._random_state
+                n_estimators=self.model_trainer_config._n_estimators,
+                min_samples_split=self.model_trainer_config._min_samples_split,
+                min_samples_leaf=self.model_trainer_config._min_samples_leaf,
+                max_depth=self.model_trainer_config._max_depth,
+                criterion=self.model_trainer_config._criterion,
+                random_state=self.model_trainer_config._random_state,
+                class_weight=self.model_trainer_config._class_weight      # 👈 new line
             )
 
             # Fit the model
@@ -92,9 +96,11 @@ class ModelTrainer:
             logging.info("Preprocessing obj loaded.")
 
             # Check if the model's accuracy meets the expected threshold
-            if accuracy_score(train_arr[:, -1], trained_model.predict(train_arr[:, :-1])) < self.model_trainer_config.expected_accuracy:
-                logging.info("No model found with score above the base score")
-                raise Exception("No model found with score above the base score")
+            y_train_pred = trained_model.predict(train_arr[:, :-1])
+            f1_train = f1_score(train_arr[:, -1], y_train_pred)
+            if f1_train < self.model_trainer_config.expected_f1_score:
+                logging.info("No model found with F1‑score above the expected threshold")
+                raise Exception("No model found with F1‑score above the expected threshold")
 
             # Save the final model object that includes both preprocessing and the trained model
             logging.info("Saving new model as performace is better than previous one.")
