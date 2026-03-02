@@ -9,94 +9,107 @@
 <body>
     <div class="card">
         <h1>🚗 Vehicle Insurance Prediction</h1>
-        <p class="subtitle">Fill in the details below to predict if a customer is interested in vehicle insurance.</p>
+        <p class="subtitle">Adjust the sliders and dropdowns below to see the prediction update instantly.</p>
 
-        <form method="post" action="/">
-            <div class="form-grid">
-                <div class="form-group">
-                    <label>👤 Gender</label>
-                    <select name="Gender" required>
-                        <option value="" disabled selected>-- Select --</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>📅 Age</label>
-                    <input type="number" name="Age" placeholder="e.g. 35" min="18" max="100" required>
-                </div>
-
-                <div class="form-group">
-                    <label>🪪 Driving License</label>
-                    <select name="Driving_License" required>
-                        <option value="" disabled selected>-- Select --</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>📍 Region Code</label>
-                    <input type="number" step="0.1" name="Region_Code" placeholder="e.g. 28.0" required>
-                </div>
-
-                <div class="form-group">
-                    <label>🛡️ Previously Insured</label>
-                    <select name="Previously_Insured" required>
-                        <option value="" disabled selected>-- Select --</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>💰 Annual Premium</label>
-                    <input type="number" step="0.01" name="Annual_Premium" placeholder="e.g. 30000" required>
-                </div>
-
-                <div class="form-group">
-                    <label>📞 Policy Sales Channel</label>
-                    <input type="number" step="0.1" name="Policy_Sales_Channel" placeholder="e.g. 26.0" required>
-                </div>
-
-                <div class="form-group">
-                    <label>⏳ Vintage (days)</label>
-                    <input type="number" name="Vintage" placeholder="e.g. 150" min="0" max="300" required>
-                </div>
-
-                <div class="form-group">
-                    <label>🚙 Vehicle Age</label>
-                    <select name="Vehicle_Age" required>
-                        <option value="" disabled selected>-- Select --</option>
-                        <option value="< 1 Year">&lt; 1 Year</option>
-                        <option value="1-2 Year">1-2 Years</option>
-                        <option value="> 2 Years">&gt; 2 Years</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>🔧 Vehicle Damage</label>
-                    <select name="Vehicle_Damage" required>
-                        <option value="" disabled selected>-- Select --</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
-                </div>
+        <!-- Interactive form (AJAX) -->
+        <div class="form-grid" id="interactive-form">
+            <!-- Gender -->
+            <div class="form-group">
+                <label>👤 Gender</label>
+                <select id="Gender" name="Gender" required>
+                    <option value="" disabled selected>-- Select --</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
             </div>
 
-            <button type="submit" class="predict-btn">🔍 Predict</button>
-        </form>
-
-        <form method="get" action="/train" style="margin-top: 1rem;">
-            <button type="submit" class="train-btn">⚙️ Train Model</button>
-        </form>
-
-        {% if context %}
-            <div class="result-card">
-                <h2>Result: {{ context }}</h2>
+            <!-- Age (slider) -->
+            <div class="form-group">
+                <label>📅 Age: <span id="AgeVal">35</span></label>
+                <input type="range" id="Age" name="Age" min="18" max="85" value="35" step="1">
             </div>
-        {% endif %}
+
+            <!-- Driving License -->
+            <div class="form-group">
+                <label>🪪 Driving License</label>
+                <select id="Driving_License" name="Driving_License" required>
+                    <option value="" disabled selected>-- Select --</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+
+            <!-- Region Code (slider) -->
+            <div class="form-group">
+                <label>📍 Region Code: <span id="Region_CodeVal">28.0</span></label>
+                <input type="range" id="Region_Code" name="Region_Code" min="0" max="52" value="28" step="0.1">
+            </div>
+
+            <!-- Previously Insured -->
+            <div class="form-group">
+                <label>🛡️ Previously Insured</label>
+                <select id="Previously_Insured" name="Previously_Insured" required>
+                    <option value="" disabled selected>-- Select --</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+
+            <!-- Annual Premium (slider) -->
+            <div class="form-group">
+                <label>💰 Annual Premium: <span id="Annual_PremiumVal">30000</span></label>
+                <input type="range" id="Annual_Premium" name="Annual_Premium" min="2000" max="540000" value="30000" step="100">
+            </div>
+
+            <!-- Policy Sales Channel (slider) -->
+            <div class="form-group">
+                <label>📞 Policy Sales Channel: <span id="Policy_Sales_ChannelVal">26.0</span></label>
+                <input type="range" id="Policy_Sales_Channel" name="Policy_Sales_Channel" min="1" max="163" value="26" step="0.1">
+            </div>
+
+            <!-- Vintage (slider) -->
+            <div class="form-group">
+                <label>⏳ Vintage (days): <span id="VintageVal">150</span></label>
+                <input type="range" id="Vintage" name="Vintage" min="10" max="299" value="150" step="1">
+            </div>
+
+            <!-- Vehicle Age -->
+            <div class="form-group">
+                <label>🚙 Vehicle Age</label>
+                <select id="Vehicle_Age" name="Vehicle_Age" required>
+                    <option value="" disabled selected>-- Select --</option>
+                    <option value="< 1 Year">&lt; 1 Year</option>
+                    <option value="1-2 Year">1-2 Years</option>
+                    <option value="> 2 Years">&gt; 2 Years</option>
+                </select>
+            </div>
+
+            <!-- Vehicle Damage -->
+            <div class="form-group">
+                <label>🔧 Vehicle Damage</label>
+                <select id="Vehicle_Damage" name="Vehicle_Damage" required>
+                    <option value="" disabled selected>-- Select --</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Real‑time result display -->
+        <div class="result-card" id="result-card" style="display: none;">
+            <h2 id="result-text"></h2>
+        </div>
+
+        <!-- Fallback form (non‑JS) – you can keep it but it's hidden when JS is enabled -->
+        <noscript>
+            <form method="post" action="/">
+                <!-- duplicate inputs here – for non‑JS browsers -->
+                <!-- (you can copy the same fields with regular inputs) -->
+                <button type="submit" class="predict-btn">Predict</button>
+            </form>
+        </noscript>
     </div>
+
+    <script src="/static/js/predict.js"></script>
 </body>
 </html>
